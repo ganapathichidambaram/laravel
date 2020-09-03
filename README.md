@@ -67,3 +67,8 @@ npm run prod
 .jumbotron { background-color - Removed. Padding reduced to 1em}
 . fixed-bottom .fixed-top { Added margin-bottom to 1rem}
 ```
+
+* Custom Sytles for Fixed Navbar and Sticky footer.
+```
+ html{position:relative;min-height:100%}body{margin-bottom:40px}.footer{position:absolute;bottom:0;width:100%;height:40px;line-height:40px;background-color:#f5f5f5}
+```

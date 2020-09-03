@@ -10,7 +10,6 @@
 
   </main>
   
-  <hr>  
   @include("includes.footer")
   @include("includes.footer-scripts")
 </body>
