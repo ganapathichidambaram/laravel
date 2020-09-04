@@ -1,0 +1,1 @@
+importScripts("/js/workbox/workbox-sw.js"),workbox.setConfig({modulePathPrefix:"/js/workbox/"}),workbox.routing.registerRoute(({request:t})=>"script"===t.destination||"style"===t.destination||"image"===t.destination||"font"===t.destination||"document"===t.destination||"json"===t.destination||"manifest"===t.destination,new workbox.strategies.StaleWhileRevalidate);

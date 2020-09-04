@@ -1,0 +1,30 @@
+{
+    "lang": "English",
+    "dir": "ltr",
+    "name": "Name of Application",
+    "short_name": "Short Name of Application",
+    "description": "Description of Application",
+    "scope": "/",
+    "icons": [{"src":"https://laravel.technobureau.com/favicon.ico","sizes":"16x16"}],
+    "icons": [
+        {
+        "src": "/favicon.ico",
+        "sizes": "16x16"
+        },
+        {
+        "src": "/img/apple-touch-icon-192x192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+        },
+        {
+        "src": "/img/apple-touch-icon-512x512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+        }
+    ],
+    "theme_color": "#590C12",
+    "background_color": "#FFFFFF",
+    "start_url": "https://laravel.technobureau.com/",
+    "display": "fullscreen",
+    "orientation": "any"
+}  
