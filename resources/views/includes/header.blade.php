@@ -7,6 +7,7 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link rel="manifest" type="application/manifest+json" href="/manifest.json">
+    {!! SEO::generate(true) !!}
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>        
