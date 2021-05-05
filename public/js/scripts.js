@@ -14,4 +14,12 @@
         e.preventDefault();
         $("body").toggleClass("sb-sidenav-toggled");
     });
+    if(!detectMobile() && $('#layoutSidenav_nav').length == 0)
+    $("body").toggleClass("sb-sidenav-toggled");
 })(jQuery);
+
+function detectMobile()
+{
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) return true;
+    else return false;
+}

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   @include("includes.header")
-<body class="sb-nav-fixed @auth @else sb-sidenav-toggled @endauth">
+<body class="sb-nav-fixed">
   @include("includes.nav")  
   
   <div id="layoutSidenav">
