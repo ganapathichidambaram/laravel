@@ -9,4 +9,6 @@
 --}}
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}" defer></script>
+<script src="{{ asset('js/scripts.js') }}" defer></script>
+<script src="{{ asset('js/font-awesome-5.15.3.min.js') }}" crossorigin="anonymous"></script>
 @include("includes.sw")
