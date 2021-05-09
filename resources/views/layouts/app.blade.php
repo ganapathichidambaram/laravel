@@ -7,7 +7,8 @@
   <div id="layoutSidenav">
     @include("includes.left_nav") 
       <div id="layoutSidenav_content">
-        <main >
+      @include('includes.message')
+        <main class="h-100" >
           @yield("content")
         </main>
         @include("includes.footer")

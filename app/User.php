@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'email', 'name', 'password',
     ];
 
     /**
@@ -35,5 +35,32 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+    ];
+
+    static $html_disabled = [
+        'email',
+    ];
+    static $html_casts = [
+        'general'=>
+        [
+            'email'=>'email',
+            'name' => 'text',
+            'password' => 'password',
+        ],
+        'additional'=>
+        [
+            
+        ],
+        'list' => 'col-md-4',
+        'view' => 'col-md-8',
+        'layout' => 2, // 2- Column Layout
+        'search' => true,
+        'create' => true,
+        'action_edit' => true,
+        'action_delete' => true,
+        
+    ];
+    static $table_list = [
+        'email','name'
     ];
 }

@@ -17,7 +17,11 @@
     if(!detectMobile() && $('#layoutSidenav_nav').length == 0)
     $("body").toggleClass("sb-sidenav-toggled");
 })(jQuery);
-
+$(document).on('show.bs.modal','#confirmation-modal', function (event){
+    $(this).find('#name').text($(event.relatedTarget).data('name'))
+    $('#confirmationDelForm').attr('action', $(event.relatedTarget).data('attr'));
+    $(this).scrollTop(0);
+})
 function detectMobile()
 {
     if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) return true;
