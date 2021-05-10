@@ -178,6 +178,7 @@ return [
         * Custom ServiceProvider
         */
         Artesaos\SEOTools\Providers\SEOToolsServiceProvider::class,
+        App\Providers\PermissionsServiceProvider::class,
         
 
     ],
