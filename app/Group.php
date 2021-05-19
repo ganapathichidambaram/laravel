@@ -5,11 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class Group extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'slug', 'name',
+        'slug', 'name','description',
     ];
 
     static $html_disabled = [
@@ -20,6 +20,7 @@ class Role extends Model
         [
             'name' => 'text',
             'slug' => 'text',
+            'description' => 'text',
         ],
         'additional'=>
         [
@@ -37,15 +38,4 @@ class Role extends Model
     static $table_list = [
         'name'
     ];
-    public function permissions() {
-
-        return $this->belongsToMany(Permission::class,'roles_permissions');
-            
-     }
-     
-     public function users() {
-     
-        return $this->belongsToMany(User::class,'users_roles');
-            
-     }
 }

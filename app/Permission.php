@@ -10,7 +10,7 @@ class Permission extends Model
    use HasFactory;
    
    protected $fillable = [
-      'slug', 'name',
+      'slug', 'name','description',
    ];
    
    static $html_disabled = [
@@ -21,6 +21,7 @@ class Permission extends Model
        [
            'name' => 'text',
            'slug' => 'text',
+           'description' => 'text',
        ],
        'additional'=>
        [
@@ -38,15 +39,5 @@ class Permission extends Model
    static $table_list = [
        'name'
    ];
-    public function roles() {
 
-        return $this->belongsToMany(Role::class,'roles_permissions');
-            
-     }
-     
-     public function users() {
-     
-        return $this->belongsToMany(User::class,'users_permissions');
-            
-     }
 }

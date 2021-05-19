@@ -178,7 +178,10 @@ return [
         * Custom ServiceProvider
         */
         Artesaos\SEOTools\Providers\SEOToolsServiceProvider::class,
-        App\Providers\PermissionsServiceProvider::class,
+        //App\Providers\PermissionsServiceProvider::class,
+        Junges\ACL\ACLServiceProvider::class,
+        Junges\ACL\ACLAuthServiceProvider::class,
+        Junges\ACL\ACLEventsServiceProvider::class,
         
 
     ],

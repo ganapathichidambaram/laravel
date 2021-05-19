@@ -24,7 +24,7 @@ class PermissionController extends Controller
                     ->when($keyword,function ($query) use ($keyword) {
                         $query->orWhere('name', 'LIKE', '%' . $keyword . '%')
                         ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                    })->orderBy('id','DESC')->paginate(5);
+                    })->orderBy('id','DESC')->paginate(10);
     }
     /**
      * Display a listing of the resource.
@@ -38,9 +38,9 @@ class PermissionController extends Controller
                     ->when($keyword,function ($query) use ($keyword) {
                         $query->orWhere('name', 'LIKE', '%' . $keyword . '%')
                         ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                    })->orderBy('id','DESC')->paginate(5);
+                    })->orderBy('id','DESC')->paginate(10);
         return view('conf-management',compact('ConfList'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+            ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -56,9 +56,9 @@ class PermissionController extends Controller
                             $query
                             ->orWhere('name', 'LIKE', '%' . $keyword . '%')
                             ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);
+                        })->orderBy('id','DESC')->paginate(10);
         return view('conf-management',compact('ConfList'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+            ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -83,10 +83,10 @@ class PermissionController extends Controller
                             $query
                             ->orWhere('name', 'LIKE', '%' . $keyword . '%')
                             ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);
+                        })->orderBy('id','DESC')->paginate(10);
         return view('conf-management',compact('ConfList'))
-                ->with('i', ($request->input('page', 1) - 1) * 5)
-                ->with('success','User created successfully');
+                ->with('i', ($request->input('page', 1) - 1) * 10)
+                ->with('success','Permission created successfully');
     }
     
     /**
@@ -104,9 +104,9 @@ class PermissionController extends Controller
                             $query
                             ->orWhere('name', 'LIKE', '%' . $keyword . '%')
                             ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);        
+                        })->orderBy('id','DESC')->paginate(10);        
         return view('conf-management',compact('conf','ConfList'))
-                ->with('i', ($request->input('page', 1) - 1) * 5);
+                ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -124,9 +124,9 @@ class PermissionController extends Controller
                             $query
                             ->orWhere('name', 'LIKE', '%' . $keyword . '%')
                             ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);
+                        })->orderBy('id','DESC')->paginate(10);
         return view('conf-management',compact('conf','ConfList'))
-                ->with('i', ($request->input('page', 1) - 1) * 5);
+                ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -152,10 +152,10 @@ class PermissionController extends Controller
                                 $query
                                 ->orWhere('name', 'LIKE', '%' . $keyword . '%')
                                 ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                            })->orderBy('id','DESC')->paginate(5);
+                            })->orderBy('id','DESC')->paginate(10);
         return view('conf-management',compact('conf','ConfList'))
-                ->with('success','User updated successfully')
-                ->with('i', ($request->input('page', 1) - 1) * 5);
+                ->with('success','Permission updated successfully')
+                ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -173,9 +173,9 @@ class PermissionController extends Controller
                             $query
                             ->orWhere('name', 'LIKE', '%' . $keyword . '%')
                             ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);
+                        })->orderBy('id','DESC')->paginate(10);
         return view('conf-management',compact('ConfList'))
-                ->with('success','User deleted successfully')
-                ->with('i', ($request->input('page', 1) - 1) * 5);        
+                ->with('success','Permission deleted successfully')
+                ->with('i', ($request->input('page', 1) - 1) * 10);        
     }
 }

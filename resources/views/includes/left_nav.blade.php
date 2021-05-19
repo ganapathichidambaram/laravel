@@ -17,7 +17,7 @@
                 <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
                         <a class="nav-link" href="/users/">Users</a>
-                        <a class="nav-link" href="/roles">Roles</a>
+                        <a class="nav-link" href="/groups">Groups</a>
                         <a class="nav-link" href="/permissions/">Permissions</a>
                     </nav>
                 </div>

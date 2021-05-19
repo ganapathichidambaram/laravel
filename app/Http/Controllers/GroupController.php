@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Role;
+use App\Group;
 
-class RoleController extends Controller
+class GroupController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -20,11 +20,11 @@ class RoleController extends Controller
     public function getData(Request $request)
     {        
         $keyword = request('search');
-        $ConfList = Role::select('id','name','slug')
+        $ConfList = Group::select('id','name','slug')
                     ->when($keyword,function ($query) use ($keyword) {
                         $query->orWhere('name', 'LIKE', '%' . $keyword . '%')
                         ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                    })->orderBy('id','DESC')->paginate(5);
+                    })->orderBy('id','DESC')->paginate(10);
     }
     /**
      * Display a listing of the resource.
@@ -46,13 +46,13 @@ class RoleController extends Controller
         // $dev_role->permissions()->attach($manager_permission);
         //$dev_role->permissions()->attach($admin_permission);
         $keyword = request('search');
-        $ConfList = Role::select('id','name','slug')
+        $ConfList = Group::select('id','name','slug')
                     ->when($keyword,function ($query) use ($keyword) {
                         $query->orWhere('name', 'LIKE', '%' . $keyword . '%')
                         ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                    })->orderBy('id','DESC')->paginate(5);
+                    })->orderBy('id','DESC')->paginate(10);
         return view('conf-management',compact('ConfList'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+            ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -63,14 +63,14 @@ class RoleController extends Controller
     public function create(Request $request)
     {
         $keyword = request('search');
-        $ConfList = Role::select('id','name','slug')
+        $ConfList = Group::select('id','name','slug')
                     ->when($keyword,function ($query) use ($keyword) {
                             $query
                             ->orWhere('name', 'LIKE', '%' . $keyword . '%')
                             ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);
+                        })->orderBy('id','DESC')->paginate(10);
         return view('conf-management',compact('ConfList'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+            ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -83,22 +83,22 @@ class RoleController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'slug' => 'required|unique:roles,slug',
+            'slug' => 'required|unique:groups,slug',
         ]);
     
         $input = $request->all();
 
-        $conf = Role::create($input);
+        $conf = Group::create($input);
         $keyword = request('search');
-        $ConfList = Role::select('id','name','slug')
+        $ConfList = Group::select('id','name','slug')
                     ->when($keyword,function ($query) use ($keyword) {
                             $query
                             ->orWhere('name', 'LIKE', '%' . $keyword . '%')
                             ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);
+                        })->orderBy('id','DESC')->paginate(10);
         return view('conf-management',compact('ConfList'))
-                ->with('i', ($request->input('page', 1) - 1) * 5)
-                ->with('success','User created successfully');
+                ->with('i', ($request->input('page', 1) - 1) * 10)
+                ->with('success','Group created successfully');
     }
     
     /**
@@ -109,16 +109,16 @@ class RoleController extends Controller
      */
     public function show(Request $request ,$id)
     {
-        $conf = Role::find($id);
+        $conf = Group::find($id);
         $keyword = request('search');
-        $ConfList = Role::select('id','name','slug')
+        $ConfList = Group::select('id','name','slug')
                     ->when($keyword,function ($query) use ($keyword) {
                             $query
                             ->orWhere('name', 'LIKE', '%' . $keyword . '%')
                             ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);        
+                        })->orderBy('id','DESC')->paginate(10);        
         return view('conf-management',compact('conf','ConfList'))
-                ->with('i', ($request->input('page', 1) - 1) * 5);
+                ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -129,16 +129,16 @@ class RoleController extends Controller
      */
     public function edit(Request $request ,$id)
     {        
-        $conf = Role::find($id);
+        $conf = Group::find($id);
         $keyword = request('search');
-        $ConfList = Role::select('id','name','slug')
+        $ConfList = Group::select('id','name','slug')
                     ->when($keyword,function ($query) use ($keyword) {
                             $query
                             ->orWhere('name', 'LIKE', '%' . $keyword . '%')
                             ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);
+                        })->orderBy('id','DESC')->paginate(10);
         return view('conf-management',compact('conf','ConfList'))
-                ->with('i', ($request->input('page', 1) - 1) * 5);
+                ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -156,18 +156,18 @@ class RoleController extends Controller
     
         $input = $request->all();
         
-        $conf = Role::find($id);
+        $conf = Group::find($id);
         $conf->update($input);
         $keyword = request('search');
-        $ConfList = Role::select('id','name','slug')
+        $ConfList = Group::select('id','name','slug')
                         ->when($keyword,function ($query) use ($keyword) {
                                 $query
                                 ->orWhere('name', 'LIKE', '%' . $keyword . '%')
                                 ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                            })->orderBy('id','DESC')->paginate(5);
+                            })->orderBy('id','DESC')->paginate(10);
         return view('conf-management',compact('conf','ConfList'))
-                ->with('success','User updated successfully')
-                ->with('i', ($request->input('page', 1) - 1) * 5);
+                ->with('success','Group updated successfully')
+                ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -178,16 +178,16 @@ class RoleController extends Controller
      */
     public function destroy(Request $request,$id)
     {
-        Role::find($id)->delete();
+        Group::find($id)->delete();
         $keyword = request('search');
-        $ConfList = Role::select('id','name','slug')
+        $ConfList = Group::select('id','name','slug')
                     ->when($keyword,function ($query) use ($keyword) {
                             $query
                             ->orWhere('name', 'LIKE', '%' . $keyword . '%')
                             ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);
+                        })->orderBy('id','DESC')->paginate(10);
         return view('conf-management',compact('ConfList'))
-                ->with('success','User deleted successfully')
-                ->with('i', ($request->input('page', 1) - 1) * 5);        
+                ->with('success','Group deleted successfully')
+                ->with('i', ($request->input('page', 1) - 1) * 10);        
     }
 }
