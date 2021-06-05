@@ -9,6 +9,7 @@
     <link rel="manifest" type="application/manifest+json" href="/manifest.json">
     {!! SEO::generate(true) !!}
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
 </head>        
