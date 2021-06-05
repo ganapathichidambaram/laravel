@@ -136,18 +136,23 @@ class GroupController extends Controller
 
     public function formatResponse(Request $request,$conf = NULL)
     {
-        $view = $this->view;
-
-        $ConfList = $this->getData();
-
-        $var = array('ConfList','view');
-
-        if(isset($conf))
-        $result = compact($var,'conf');
-        else
-        $result = compact($var);
-
         $Func_Type = debug_backtrace()[1]['function'];
+
+        if( ( $request->is('api/*') || $request->ajax() ) && isset($conf) )
+            return response()->json($conf); 
+        else if( ( $request->is('api/*') || $request->ajax() ) && !isset($conf) && $Func_Type != "index" )
+            return response()->json(['error' => ucfirst(Str::singular($this->view['table'])). ' Not found'],404);
+        else if( ( $request->is('api/*') || $request->ajax() ) && !isset($conf) && $Func_Type == "index" )
+            return response()->json($this->getData());
+        else
+            $ConfList = $this->getData();
+        
+        $view = $this->view;
+        $var = array('ConfList','view');
+        if(isset($conf))
+            $result = compact($var,'conf');
+        else
+            $result = compact($var);
 
         $massage = array(
             "store" => "created",
@@ -156,7 +161,7 @@ class GroupController extends Controller
         );
         if($Func_Type == "store" || $Func_Type == "update" || $Func_Type == "destroy")
             $message = ucfirst(Str::singular($this->view['table']))." ". ucfirst($massage[$Func_Type]) ." successfully";
-        
+
         if(isset($message))
         return view('conf-management',$result)
                 ->with('success',$message)
