@@ -15,19 +15,28 @@ class UserController extends Controller
      *
      * @return void
      */
+    private $view;
+
     public function __construct(Request $request)
     {
         $this->middleware('auth');
+        $conf = New User();
+        $this->view["casts"]=$conf::$html_casts;
+        $this->view["list"]=$conf::$table_list;
+        $this->view["disabled"]=$conf::$html_disabled;
+        $this->view["table"]=$conf->getTable();
+        $this->view["hidden"]=$conf->getHidden();
     }
 
-    public function getData(Request $request)
-    {        
+    public function getData()
+    {
         $keyword = request('search');
-        $ConfList = User::select('id','name','email','password')
+        return User::select('id','name','email','password')
                     ->when($keyword,function ($query) use ($keyword) {
                         $query->orWhere('name', 'LIKE', '%' . $keyword . '%')
                         ->orWhere('email', 'LIKE', '%' . $keyword . '%');
-                    })->orderBy('id','DESC')->paginate(5);
+                    })->orderBy('id','DESC')->paginate(10);
+        
     }
     /**
      * Display a listing of the resource.
@@ -36,14 +45,11 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $keyword = request('search');
-        $ConfList = User::select('id','name','email','password')
-                    ->when($keyword,function ($query) use ($keyword) {
-                        $query->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                        ->orWhere('email', 'LIKE', '%' . $keyword . '%');
-                    })->orderBy('id','DESC')->paginate(5);
-        return view('conf-management',compact('ConfList'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+        //$keyword = request('search');
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('ConfList','view'))
+            ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -53,15 +59,10 @@ class UserController extends Controller
      */
     public function create(Request $request)
     {
-        $keyword = request('search');
-        $ConfList = User::select('id','name','email','password')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('email', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);
-        return view('conf-management',compact('ConfList'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('ConfList','view'))
+            ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -82,15 +83,10 @@ class UserController extends Controller
         $input['password'] = Hash::make($input['password']);
     
         $conf = User::create($input);
-        $keyword = request('search');
-        $ConfList = User::select('id','name','email','password')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('email', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);
-        return view('conf-management',compact('ConfList'))
-                ->with('i', ($request->input('page', 1) - 1) * 5)
+        $ConfList = $this->getData();
+        $view = $this->view;                        
+        return view('conf-management',compact('ConfList','view'))
+                ->with('i', ($request->input('page', 1) - 1) * 10)
                 ->with('success','User created successfully');
     }
     
@@ -103,15 +99,10 @@ class UserController extends Controller
     public function show(Request $request ,$id)
     {
         $conf = User::find($id);
-        $keyword = request('search');
-        $ConfList = User::select('id','name','email','password')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('email', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);        
-        return view('conf-management',compact('conf','ConfList'))
-                ->with('i', ($request->input('page', 1) - 1) * 5);
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('conf','ConfList','view'))
+                ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -123,15 +114,10 @@ class UserController extends Controller
     public function edit(Request $request ,$id)
     {        
         $conf = User::find($id);
-        $keyword = request('search');
-        $ConfList = User::select('id','name','email','password')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('email', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);
-        return view('conf-management',compact('conf','ConfList'))
-                ->with('i', ($request->input('page', 1) - 1) * 5);
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('conf','ConfList','view'))
+                ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -156,16 +142,11 @@ class UserController extends Controller
 
         $conf = User::find($id);
         $conf->update($input);
-        $keyword = request('search');
-        $ConfList = User::select('id','name','email','password')
-                        ->when($keyword,function ($query) use ($keyword) {
-                                $query
-                                ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                                ->orWhere('email', 'LIKE', '%' . $keyword . '%');
-                            })->orderBy('id','DESC')->paginate(5);
-        return view('conf-management',compact('conf','ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('conf','ConfList','view'))
                 ->with('success','User updated successfully')
-                ->with('i', ($request->input('page', 1) - 1) * 5);
+                ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
     /**
@@ -177,15 +158,10 @@ class UserController extends Controller
     public function destroy(Request $request,$id)
     {
         User::find($id)->delete();
-        $keyword = request('search');
-        $ConfList = User::select('id','name','email','password')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('email', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(5);
-        return view('conf-management',compact('ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('ConfList','view'))
                 ->with('success','User deleted successfully')
-                ->with('i', ($request->input('page', 1) - 1) * 5);        
+                ->with('i', ($request->input('page', 1) - 1) * 10);        
     }
 }

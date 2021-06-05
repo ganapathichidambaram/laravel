@@ -12,19 +12,27 @@ class GroupController extends Controller
      *
      * @return void
      */
+    private $view;
     public function __construct(Request $request)
     {
         $this->middleware('auth');
+        $conf = new Group();
+        $this->view["casts"]=$conf::$html_casts;
+        $this->view["list"]=$conf::$table_list;
+        $this->view["disabled"]=$conf::$html_disabled;
+        $this->view["table"]=$conf->getTable();
+        $this->view["hidden"]=$conf->getHidden();
     }
 
-    public function getData(Request $request)
-    {        
+    public function getData()
+    {
         $keyword = request('search');
-        $ConfList = Group::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                        $query->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                        ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                    })->orderBy('id','DESC')->paginate(10);
+        return Group::select('id','name','slug')
+                ->when($keyword,function ($query) use ($keyword) {
+                    $query->orWhere('name', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
+                })->orderBy('id','DESC')->paginate(10);
+        
     }
     /**
      * Display a listing of the resource.
@@ -33,25 +41,10 @@ class GroupController extends Controller
      */
     public function index(Request $request)
     {
-        // $dev_permission = Permission::where('slug','play-recording')->first();
-		// $manager_permission = Permission::where('slug', 'download-recording')->first();
-        // $admin_permission = Permission::where('slug', 'bulk-download')->first();
 
-		//RoleTableSeeder.php
-		// $dev_role = new Role();
-		// $dev_role->slug = 'admin';
-		// $dev_role->name = 'Admin';
-		// $dev_role->save();
-		// $dev_role->permissions()->attach($dev_permission);
-        // $dev_role->permissions()->attach($manager_permission);
-        //$dev_role->permissions()->attach($admin_permission);
-        $keyword = request('search');
-        $ConfList = Group::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                        $query->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                        ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                    })->orderBy('id','DESC')->paginate(10);
-        return view('conf-management',compact('ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('ConfList','view'))
             ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
@@ -62,14 +55,9 @@ class GroupController extends Controller
      */
     public function create(Request $request)
     {
-        $keyword = request('search');
-        $ConfList = Group::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(10);
-        return view('conf-management',compact('ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('ConfList','view'))
             ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
@@ -89,14 +77,9 @@ class GroupController extends Controller
         $input = $request->all();
 
         $conf = Group::create($input);
-        $keyword = request('search');
-        $ConfList = Group::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(10);
-        return view('conf-management',compact('ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('ConfList','view'))
                 ->with('i', ($request->input('page', 1) - 1) * 10)
                 ->with('success','Group created successfully');
     }
@@ -110,14 +93,9 @@ class GroupController extends Controller
     public function show(Request $request ,$id)
     {
         $conf = Group::find($id);
-        $keyword = request('search');
-        $ConfList = Group::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(10);        
-        return view('conf-management',compact('conf','ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('conf','ConfList','view'))
                 ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
@@ -130,14 +108,9 @@ class GroupController extends Controller
     public function edit(Request $request ,$id)
     {        
         $conf = Group::find($id);
-        $keyword = request('search');
-        $ConfList = Group::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(10);
-        return view('conf-management',compact('conf','ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('conf','ConfList','view'))
                 ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
@@ -158,14 +131,9 @@ class GroupController extends Controller
         
         $conf = Group::find($id);
         $conf->update($input);
-        $keyword = request('search');
-        $ConfList = Group::select('id','name','slug')
-                        ->when($keyword,function ($query) use ($keyword) {
-                                $query
-                                ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                                ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                            })->orderBy('id','DESC')->paginate(10);
-        return view('conf-management',compact('conf','ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;                            
+        return view('conf-management',compact('conf','ConfList','view'))
                 ->with('success','Group updated successfully')
                 ->with('i', ($request->input('page', 1) - 1) * 10);
     }
@@ -179,14 +147,9 @@ class GroupController extends Controller
     public function destroy(Request $request,$id)
     {
         Group::find($id)->delete();
-        $keyword = request('search');
-        $ConfList = Group::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(10);
-        return view('conf-management',compact('ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('ConfList','view'))
                 ->with('success','Group deleted successfully')
                 ->with('i', ($request->input('page', 1) - 1) * 10);        
     }

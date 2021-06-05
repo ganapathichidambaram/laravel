@@ -12,15 +12,24 @@ class PermissionController extends Controller
      *
      * @return void
      */
+    
+    private $view;
+
     public function __construct(Request $request)
     {
         $this->middleware('auth');
+        $conf = new Permission();
+        $this->view["casts"]=$conf::$html_casts;
+        $this->view["list"]=$conf::$table_list;
+        $this->view["disabled"]=$conf::$html_disabled;
+        $this->view["table"]=$conf->getTable();
+        $this->view["hidden"]=$conf->getHidden();
     }
 
-    public function getData(Request $request)
-    {        
+    private function getData() 
+    {
         $keyword = request('search');
-        $ConfList = Permission::select('id','name','slug')
+        return Permission::select('id','name','slug')
                     ->when($keyword,function ($query) use ($keyword) {
                         $query->orWhere('name', 'LIKE', '%' . $keyword . '%')
                         ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
@@ -33,13 +42,9 @@ class PermissionController extends Controller
      */
     public function index(Request $request)
     {        
-        $keyword = request('search');
-        $ConfList = Permission::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                        $query->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                        ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                    })->orderBy('id','DESC')->paginate(10);
-        return view('conf-management',compact('ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('ConfList','view'))
             ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
@@ -50,14 +55,9 @@ class PermissionController extends Controller
      */
     public function create(Request $request)
     {
-        $keyword = request('search');
-        $ConfList = Permission::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(10);
-        return view('conf-management',compact('ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('ConfList','view'))
             ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
@@ -77,14 +77,9 @@ class PermissionController extends Controller
         $input = $request->all();
     
         $conf = Permission::create($input);
-        $keyword = request('search');
-        $ConfList = Permission::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(10);
-        return view('conf-management',compact('ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('ConfList','view'))
                 ->with('i', ($request->input('page', 1) - 1) * 10)
                 ->with('success','Permission created successfully');
     }
@@ -98,14 +93,9 @@ class PermissionController extends Controller
     public function show(Request $request ,$id)
     {
         $conf = Permission::find($id);
-        $keyword = request('search');
-        $ConfList = Permission::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(10);        
-        return view('conf-management',compact('conf','ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;     
+        return view('conf-management',compact('conf','ConfList','view'))
                 ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
@@ -118,14 +108,9 @@ class PermissionController extends Controller
     public function edit(Request $request ,$id)
     {        
         $conf = Permission::find($id);
-        $keyword = request('search');
-        $ConfList = Permission::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(10);
-        return view('conf-management',compact('conf','ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('conf','ConfList','view'))
                 ->with('i', ($request->input('page', 1) - 1) * 10);
     }
     
@@ -146,14 +131,9 @@ class PermissionController extends Controller
 
         $conf = Permission::find($id);
         $conf->update($input);
-        $keyword = request('search');
-        $ConfList = Permission::select('id','name','slug')
-                        ->when($keyword,function ($query) use ($keyword) {
-                                $query
-                                ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                                ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                            })->orderBy('id','DESC')->paginate(10);
-        return view('conf-management',compact('conf','ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('conf','ConfList','view'))
                 ->with('success','Permission updated successfully')
                 ->with('i', ($request->input('page', 1) - 1) * 10);
     }
@@ -167,14 +147,9 @@ class PermissionController extends Controller
     public function destroy(Request $request,$id)
     {
         Permission::find($id)->delete();
-        $keyword = request('search');
-        $ConfList = Permission::select('id','name','slug')
-                    ->when($keyword,function ($query) use ($keyword) {
-                            $query
-                            ->orWhere('name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
-                        })->orderBy('id','DESC')->paginate(10);
-        return view('conf-management',compact('ConfList'))
+        $ConfList = $this->getData();
+        $view = $this->view;
+        return view('conf-management',compact('ConfList','view'))
                 ->with('success','Permission deleted successfully')
                 ->with('i', ($request->input('page', 1) - 1) * 10);        
     }
