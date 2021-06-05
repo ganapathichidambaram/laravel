@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Group;
+use Illuminate\Support\Str;
 
 class GroupController extends Controller
 {
@@ -13,21 +14,23 @@ class GroupController extends Controller
      * @return void
      */
     private $view;
+    private $conf;
+
     public function __construct(Request $request)
     {
         $this->middleware('auth');
-        $conf = new Group();
-        $this->view["casts"]=$conf::$html_casts;
-        $this->view["list"]=$conf::$table_list;
-        $this->view["disabled"]=$conf::$html_disabled;
-        $this->view["table"]=$conf->getTable();
-        $this->view["hidden"]=$conf->getHidden();
+        $this->conf = new Group();
+        $this->view["casts"]=$this->conf::$html_casts;
+        $this->view["list"]=$this->conf::$table_list;
+        $this->view["disabled"]=$this->conf::$html_disabled;
+        $this->view["table"]=$this->conf->getTable();
+        $this->view["hidden"]=$this->conf->getHidden();
     }
 
     public function getData()
     {
         $keyword = request('search');
-        return Group::select('id','name','slug')
+        return $this->conf::select('id','name','slug')
                 ->when($keyword,function ($query) use ($keyword) {
                     $query->orWhere('name', 'LIKE', '%' . $keyword . '%')
                     ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
@@ -41,11 +44,7 @@ class GroupController extends Controller
      */
     public function index(Request $request)
     {
-
-        $ConfList = $this->getData();
-        $view = $this->view;
-        return view('conf-management',compact('ConfList','view'))
-            ->with('i', ($request->input('page', 1) - 1) * 10);
+        return $this->formatResponse($request);
     }
     
     /**
@@ -55,10 +54,7 @@ class GroupController extends Controller
      */
     public function create(Request $request)
     {
-        $ConfList = $this->getData();
-        $view = $this->view;
-        return view('conf-management',compact('ConfList','view'))
-            ->with('i', ($request->input('page', 1) - 1) * 10);
+        return $this->formatResponse($request);
     }
     
     /**
@@ -71,17 +67,13 @@ class GroupController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'slug' => 'required|unique:groups,slug',
+            'slug' => "required|unique:".Str::plural($this->view['table']).",slug"
         ]);
     
         $input = $request->all();
 
-        $conf = Group::create($input);
-        $ConfList = $this->getData();
-        $view = $this->view;
-        return view('conf-management',compact('ConfList','view'))
-                ->with('i', ($request->input('page', 1) - 1) * 10)
-                ->with('success','Group created successfully');
+        $conf = $this->conf::create($input);
+        return $this->formatResponse($request);
     }
     
     /**
@@ -92,11 +84,8 @@ class GroupController extends Controller
      */
     public function show(Request $request ,$id)
     {
-        $conf = Group::find($id);
-        $ConfList = $this->getData();
-        $view = $this->view;
-        return view('conf-management',compact('conf','ConfList','view'))
-                ->with('i', ($request->input('page', 1) - 1) * 10);
+        $conf = $this->conf::find($id);
+        return $this->formatResponse($request,$conf);
     }
     
     /**
@@ -107,11 +96,8 @@ class GroupController extends Controller
      */
     public function edit(Request $request ,$id)
     {        
-        $conf = Group::find($id);
-        $ConfList = $this->getData();
-        $view = $this->view;
-        return view('conf-management',compact('conf','ConfList','view'))
-                ->with('i', ($request->input('page', 1) - 1) * 10);
+        $conf = $this->conf::find($id);
+        return $this->formatResponse($request,$conf);
     }
     
     /**
@@ -129,13 +115,10 @@ class GroupController extends Controller
     
         $input = $request->all();
         
-        $conf = Group::find($id);
+        $conf = $this->conf::find($id);
         $conf->update($input);
-        $ConfList = $this->getData();
-        $view = $this->view;                            
-        return view('conf-management',compact('conf','ConfList','view'))
-                ->with('success','Group updated successfully')
-                ->with('i', ($request->input('page', 1) - 1) * 10);
+
+        return $this->formatResponse($request,$conf);        
     }
     
     /**
@@ -146,11 +129,41 @@ class GroupController extends Controller
      */
     public function destroy(Request $request,$id)
     {
-        Group::find($id)->delete();
-        $ConfList = $this->getData();
+        $this->conf::find($id)->delete();
+        return $this->formatResponse($request);
+               
+    }
+
+    public function formatResponse(Request $request,$conf = NULL)
+    {
         $view = $this->view;
-        return view('conf-management',compact('ConfList','view'))
-                ->with('success','Group deleted successfully')
-                ->with('i', ($request->input('page', 1) - 1) * 10);        
+
+        $ConfList = $this->getData();
+
+        $var = array('ConfList','view');
+
+        if(isset($conf))
+        $result = compact($var,'conf');
+        else
+        $result = compact($var);
+
+        $Func_Type = debug_backtrace()[1]['function'];
+
+        $massage = array(
+            "store" => "created",
+            "update" => "updated",
+            "destroy" => "deleted",
+        );
+        if($Func_Type == "store" || $Func_Type == "update" || $Func_Type == "destroy")
+            $message = ucfirst(Str::singular($this->view['table']))." ". ucfirst($massage[$Func_Type]) ." successfully";
+        
+        if(isset($message))
+        return view('conf-management',$result)
+                ->with('success',$message)
+                ->with('i', ($request->input('page', 1) - 1) * 10); 
+        else
+        return view('conf-management',$result)
+                ->with('i', ($request->input('page', 1) - 1) * 10);
+
     }
 }

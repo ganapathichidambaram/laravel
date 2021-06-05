@@ -118,7 +118,7 @@
                                 <div class="form-group row">
                                     <label for="{{$fields}}" class="col-md-5 col-form-label">{{ __(ucfirst($fields)) }}</label>
                                     <div class="col-md-7">
-                                        <input id="{{$fields}}" type="{{$val}}" class="form-control @error($fields) is-invalid @enderror" name="{{$fields}}" value="@isset($conf) {{ !in_array($fields, $view['hidden'])?$conf[$fields]:'' }} @endisset" placeholder="Enter {{ __(ucfirst($fields)) }}" @if(!Str::endsWith(Request::url(),'create')) @if(!Str::endsWith(Request::url(),'edit') || in_array($fields,$view['disabled']) ) disabled @endif @endif autocomplete="{{$fields}}">
+                                        <input id="{{$fields}}" type="{{$val}}" class="form-control @error($fields) is-invalid @enderror" name="{{$fields}}" value="@isset($conf){{ !in_array($fields, $view['hidden'])?$conf[$fields]:'' }}@endisset" placeholder="Enter {{ __(ucfirst($fields)) }}" @if(!Str::endsWith(Request::url(),'create')) @if(!Str::endsWith(Request::url(),'edit') || in_array($fields,$view['disabled']) ) disabled @endif @endif autocomplete="{{$fields}}">
 
                                         @error($fields)
                                             <span class="invalid-feedback" role="alert">

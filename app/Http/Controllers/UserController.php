@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Hash;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 
 class UserController extends Controller
@@ -16,16 +17,17 @@ class UserController extends Controller
      * @return void
      */
     private $view;
+    private $conf;
 
     public function __construct(Request $request)
     {
         $this->middleware('auth');
-        $conf = New User();
-        $this->view["casts"]=$conf::$html_casts;
-        $this->view["list"]=$conf::$table_list;
-        $this->view["disabled"]=$conf::$html_disabled;
-        $this->view["table"]=$conf->getTable();
-        $this->view["hidden"]=$conf->getHidden();
+        $this->conf = New User();
+        $this->view["casts"]=$this->conf::$html_casts;
+        $this->view["list"]=$this->conf::$table_list;
+        $this->view["disabled"]=$this->conf::$html_disabled;
+        $this->view["table"]=$this->conf->getTable();
+        $this->view["hidden"]=$this->conf->getHidden();
     }
 
     public function getData()
@@ -45,11 +47,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        //$keyword = request('search');
-        $ConfList = $this->getData();
-        $view = $this->view;
-        return view('conf-management',compact('ConfList','view'))
-            ->with('i', ($request->input('page', 1) - 1) * 10);
+        return $this->formatResponse($request);
     }
     
     /**
@@ -59,10 +57,7 @@ class UserController extends Controller
      */
     public function create(Request $request)
     {
-        $ConfList = $this->getData();
-        $view = $this->view;
-        return view('conf-management',compact('ConfList','view'))
-            ->with('i', ($request->input('page', 1) - 1) * 10);
+        return $this->formatResponse($request);
     }
     
     /**
@@ -75,19 +70,15 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email',
+            'email' => "required|email|unique:".Str::plural($this->view['table']).",email",
             'password' => 'required',
         ]);
     
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
-    
-        $conf = User::create($input);
-        $ConfList = $this->getData();
-        $view = $this->view;                        
-        return view('conf-management',compact('ConfList','view'))
-                ->with('i', ($request->input('page', 1) - 1) * 10)
-                ->with('success','User created successfully');
+
+        $conf = $this->conf::create($input);
+        return $this->formatResponse($request);
     }
     
     /**
@@ -98,11 +89,8 @@ class UserController extends Controller
      */
     public function show(Request $request ,$id)
     {
-        $conf = User::find($id);
-        $ConfList = $this->getData();
-        $view = $this->view;
-        return view('conf-management',compact('conf','ConfList','view'))
-                ->with('i', ($request->input('page', 1) - 1) * 10);
+        $conf = $this->conf::find($id);
+        return $this->formatResponse($request,$conf);
     }
     
     /**
@@ -113,11 +101,8 @@ class UserController extends Controller
      */
     public function edit(Request $request ,$id)
     {        
-        $conf = User::find($id);
-        $ConfList = $this->getData();
-        $view = $this->view;
-        return view('conf-management',compact('conf','ConfList','view'))
-                ->with('i', ($request->input('page', 1) - 1) * 10);
+        $conf = $this->conf::find($id);
+        return $this->formatResponse($request,$conf);
     }
     
     /**
@@ -130,23 +115,21 @@ class UserController extends Controller
     public function update(Request $request, $id)
     { 
         $this->validate($request, [
-            'name' => 'required',
+            'name' => 'required',        
         ]);
     
         $input = $request->all();
+
         if(!empty($input['password'])){ 
             $input['password'] = Hash::make($input['password']);
         }else{
             $input = Arr::except($input,array('password'));    
         }
-
-        $conf = User::find($id);
+        
+        $conf = $this->conf::find($id);
         $conf->update($input);
-        $ConfList = $this->getData();
-        $view = $this->view;
-        return view('conf-management',compact('conf','ConfList','view'))
-                ->with('success','User updated successfully')
-                ->with('i', ($request->input('page', 1) - 1) * 10);
+
+        return $this->formatResponse($request,$conf);        
     }
     
     /**
@@ -157,11 +140,41 @@ class UserController extends Controller
      */
     public function destroy(Request $request,$id)
     {
-        User::find($id)->delete();
-        $ConfList = $this->getData();
+        $this->conf::find($id)->delete();
+        return $this->formatResponse($request);
+               
+    }
+
+    public function formatResponse(Request $request,$conf = NULL)
+    {
         $view = $this->view;
-        return view('conf-management',compact('ConfList','view'))
-                ->with('success','User deleted successfully')
-                ->with('i', ($request->input('page', 1) - 1) * 10);        
+
+        $ConfList = $this->getData();
+
+        $var = array('ConfList','view');
+
+        if(isset($conf))
+        $result = compact($var,'conf');
+        else
+        $result = compact($var);
+
+        $Func_Type = debug_backtrace()[1]['function'];
+
+        $massage = array(
+            "store" => "created",
+            "update" => "updated",
+            "destroy" => "deleted",
+        );
+        if($Func_Type == "store" || $Func_Type == "update" || $Func_Type == "destroy")
+            $message = ucfirst(Str::singular($this->view['table']))." ". ucfirst($massage[$Func_Type]) ." successfully";
+        
+        if(isset($message))
+        return view('conf-management',$result)
+                ->with('success',$message)
+                ->with('i', ($request->input('page', 1) - 1) * 10); 
+        else
+        return view('conf-management',$result)
+                ->with('i', ($request->input('page', 1) - 1) * 10);
+
     }
 }
