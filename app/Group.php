@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Junges\ACL\Traits\GroupsTrait;
+
 
 class Group extends Model
 {
-    use HasFactory;
+    use HasFactory,GroupsTrait;
     protected $fillable = [
         'slug', 'name','description',
     ];
@@ -21,6 +23,9 @@ class Group extends Model
             'name' => 'text',
             'slug' => 'text',
             'description' => 'text',
+            'Allocation' => 'break',
+            'permissions' => 'multi',
+            'users' => 'multi',
         ],
         'additional'=>
         [

@@ -110,24 +110,48 @@
                     @foreach ($view['casts'] as $key => $value)
                         @if(is_array($value))
                         <div id="{{$key}}" class="tab-pane fade h-100 @if($loop->iteration == 1) show active @endif" role="tabpanel" aria-labelledby="{{$key}}-tab">
-                            <h3>{{ ucfirst($key) }} Configuration</h3><hr>
+                            <h4>{{ ucfirst($key) }} Configuration</h4><hr>
                             <div class="container">
                             <div class="row">                                  
                             @foreach ($value as $fields => $val)
+                                @if( $val == 'break') 
+                                    @if(Str::startsWith($fields,'__break')) </div><hr><div class="row">
+                                    @else </div><h5>{{ ucfirst($fields) }} </h5> <hr><div class="row">
+                                    @endif
+                                    @continue
+                                @endif                                
                                 <div class="@if(isset($view['casts']['layout'])) @if($view['casts']['layout'] == 1) col-md-12 @elseif($view['casts']['layout'] == 2) col-md-6 @elseif($view['casts']['layout'] == 3) col-md-4 @else col-md-12 @endif @else col-md-12 @endif"><!-- md-6 = 2 column layout md-4 = 3 column layout  -->
-                                <div class="form-group row">
+                                    <div class="form-group row">
+                                    @if( $val == 'text' || $val =='email' || $val =='password' )
+                                        <label for="{{$fields}}" class="col-md-5 col-form-label">{{ __(ucfirst($fields)) }}</label>
+                                        <div class="col-md-7">
+                                            <input id="{{$fields}}" type="{{$val}}" class="form-control @error($fields) is-invalid @enderror" name="{{$fields}}" value="@isset($conf){{ !in_array($fields, $view['hidden'])?$conf[$fields]:'' }}@endisset" placeholder="Enter {{ __(ucfirst($fields)) }}" @if(!Str::endsWith(Request::url(),'create')) @if(!Str::endsWith(Request::url(),'edit') || in_array($fields,$view['disabled']) ) disabled @endif @endif autocomplete="{{$fields}}">
+
+                                            @error($fields)
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    @elseif( $val == 'multi' || $val == 'select')
                                     <label for="{{$fields}}" class="col-md-5 col-form-label">{{ __(ucfirst($fields)) }}</label>
                                     <div class="col-md-7">
-                                        <input id="{{$fields}}" type="{{$val}}" class="form-control @error($fields) is-invalid @enderror" name="{{$fields}}" value="@isset($conf){{ !in_array($fields, $view['hidden'])?$conf[$fields]:'' }}@endisset" placeholder="Enter {{ __(ucfirst($fields)) }}" @if(!Str::endsWith(Request::url(),'create')) @if(!Str::endsWith(Request::url(),'edit') || in_array($fields,$view['disabled']) ) disabled @endif @endif autocomplete="{{$fields}}">
-
+                                    <select name="{{$fields}}@if($val == 'multi')[]@endif" id="{{$fields}}" class="selectpicker form-control" data-live-search="true" @if($val == 'multi') multiple @endif data-actions-box="true" data-selected-text-format="count" data-size="5" >
+                                    @isset($_fData[$fields])
+                                        @foreach( $_fData[$fields] as $_fkey => $_fval)
+                                        <option value="{{$_fkey}}" @if(isset($_cData[$fields]) && in_array($_fkey,$_cData[$fields])) selected @endif>{{$_fval}}</option>
+                                        @endforeach                                        
+                                    @endisset
+                                    </select>
                                         @error($fields)
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                         @enderror
                                     </div>
-                                </div>
-                                </div>                                    
+                                    @endif
+                                    </div>
+                                </div>                                                    
                             @endforeach
                             {{-- @foreach ($value as $fields => $val)
                                 @if($loop->iteration % 2 == 0) --}}

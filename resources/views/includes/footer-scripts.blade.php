@@ -11,4 +11,6 @@
 <script src="{{ asset('js/app.js') }}" defer></script>
 <script src="{{ asset('js/scripts.js') }}" defer></script>
 <link href="{{ asset('css/font-awsome.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/bootstrap-select.min.css') }}" rel="stylesheet">
+<script src="{{ asset('js/bootstrap-select.min.js') }}" defer></script>
 <!-- @include("includes.sw") -->

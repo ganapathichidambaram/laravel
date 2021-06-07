@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Permission;
+use App\Group;
 use Hash;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -78,8 +80,10 @@ class UserController extends Controller
         $input['password'] = Hash::make($input['password']);
 
         $conf = $this->conf::create($input);
+        if(isset($input['groups'])) $conf->syncGroups($input['groups']);
+        if(isset($input['permissions'])) $conf->syncPermissions($input['permissions']);
         $message="Bearer Token: ".$conf->createToken('auth_token')->plainTextToken;
-        return $this->formatResponse($request,NULL,$message);
+        return $this->formatResponse($request,$conf,$message);
     }
     
     /**
@@ -128,7 +132,8 @@ class UserController extends Controller
         }
         
         $conf = $this->conf::find($id);
-        
+        if(isset($input['groups'])) $conf->syncGroups($input['groups']);
+        if(isset($input['permissions'])) $conf->syncPermissions($input['permissions']);
         $conf->update($input);
 
         return $this->formatResponse($request,$conf);        
@@ -163,10 +168,22 @@ class UserController extends Controller
         $view = $this->view;
         $var = array('ConfList','view');
         if(isset($conf))
-            $result = compact($var,'conf');
+        {
+            $_cData["permissions"] = $conf->permissions()->pluck('slug')->toArray();
+            $_fData["permissions"] = Permission::pluck('name','slug')->WhereNull('deleted_at')->toArray();
+            $_cData["groups"] = $conf->groups()->pluck('slug')->toArray();
+            $_fData["groups"] = Group::pluck('name','slug')->WhereNull('deleted_at')->toArray();
+            $result = compact($var,'conf','_cData','_fData');
+        }
+        else if($Func_Type == "create")
+        {
+            $_fData["permissions"] = Permission::pluck('name','slug')->WhereNull('deleted_at')->toArray();
+            $_fData["groups"] = Group::pluck('name','slug')->WhereNull('deleted_at')->toArray();
+            $result = compact($var,'_fData');
+        }
         else
             $result = compact($var);
-
+        
         $massage = array(
             "store" => "created",
             "update" => "updated",

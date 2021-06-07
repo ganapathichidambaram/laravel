@@ -52,6 +52,9 @@ class User extends Authenticatable
             'email'=>'email',
             'name' => 'text',
             'password' => 'password',
+            'Allocation'     => 'break',
+            'groups'    => 'multi',
+            'permissions' => 'multi',
         ],
         'additional'=>
         [

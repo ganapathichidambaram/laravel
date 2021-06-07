@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Permission;
+use App\User;
+use App\Group;
+//use Junges\ACL\Traits\UsersTrait;
 use Illuminate\Support\Str;
 
 class PermissionController extends Controller
@@ -73,6 +76,8 @@ class PermissionController extends Controller
         $input = $request->all();
 
         $conf = $this->conf::create($input);
+        $conf->users()->sync($input['users']);
+        $conf->groups()->sync($conf->convertToGroupIds($input['groups']));
         return $this->formatResponse($request);
     }
     
@@ -116,6 +121,8 @@ class PermissionController extends Controller
         $input = $request->all();
         
         $conf = $this->conf::find($id);
+        $conf->users()->sync($input['users']);
+        $conf->groups()->sync($conf->convertToGroupIds($input['groups']));
         $conf->update($input);
 
         return $this->formatResponse($request,$conf);        
@@ -150,7 +157,19 @@ class PermissionController extends Controller
         $view = $this->view;
         $var = array('ConfList','view');
         if(isset($conf))
-            $result = compact($var,'conf');
+        {
+            $_cData["users"] = $conf->users()->pluck('id')->toArray();
+            $_fData["users"] = User::pluck('name','id')->toArray();
+            $_cData["groups"] = $conf->groups()->pluck('slug')->toArray();
+            $_fData["groups"] = Group::pluck('name','slug')->WhereNull('deleted_at')->toArray();
+            $result = compact($var,'conf','_cData','_fData');
+        }
+        else if($Func_Type == "create")
+        {
+            $_fData["users"] = User::pluck('name','id')->toArray();
+            $_fData["groups"] = Group::pluck('name','slug')->WhereNull('deleted_at')->toArray();
+            $result = compact($var,'_fData');
+        }
         else
             $result = compact($var);
 

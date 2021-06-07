@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Group;
+use App\Permission;
+use App\User;
 use Illuminate\Support\Str;
 
 class GroupController extends Controller
@@ -73,7 +75,9 @@ class GroupController extends Controller
         $input = $request->all();
 
         $conf = $this->conf::create($input);
-        return $this->formatResponse($request);
+        if(isset($input['permissions'])) $conf->syncPermissions($input['permissions']);
+        if(isset($input['users'])) $conf->assignUser($input['users']);
+        return $this->formatResponse($request,$conf);
     }
     
     /**
@@ -114,10 +118,10 @@ class GroupController extends Controller
         ]);
     
         $input = $request->all();
-        
         $conf = $this->conf::find($id);
+        if(isset($input['permissions'])) $conf->syncPermissions($input['permissions']);
+        if(isset($input['users'])) $conf->assignUser($input['users']);
         $conf->update($input);
-
         return $this->formatResponse($request,$conf);        
     }
     
@@ -134,7 +138,7 @@ class GroupController extends Controller
                
     }
 
-    public function formatResponse(Request $request,$conf = NULL)
+    public function formatResponse(Request $request,$conf = NULL ,$message=NULL,$_cData = array(),$_fData = array())
     {
         $Func_Type = debug_backtrace()[1]['function'];
 
@@ -150,10 +154,21 @@ class GroupController extends Controller
         $view = $this->view;
         $var = array('ConfList','view');
         if(isset($conf))
-            $result = compact($var,'conf');
+        {
+            $_cData["permissions"] = $conf->permissions()->pluck('slug')->toArray();
+            $_fData["permissions"] = Permission::pluck('name','slug')->WhereNull('deleted_at')->toArray();
+            $_cData["users"] = $conf->users()->pluck('id')->toArray();
+            $_fData["users"] = User::pluck('name','id')->toArray();
+            $result = compact($var,'conf','_cData','_fData');
+        }
+        else if($Func_Type == "create")
+        {
+            $_fData["permissions"] = Permission::pluck('name','slug')->WhereNull('deleted_at')->toArray();
+            $_fData["users"] = User::pluck('name','id')->toArray();
+            $result = compact($var,'_fData');
+        }
         else
             $result = compact($var);
-
         $massage = array(
             "store" => "created",
             "update" => "updated",
