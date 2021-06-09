@@ -5,7 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Schema;
-
+use DB; // Illuminate\Support\Facades\DB;
+use File;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,5 +30,11 @@ class AppServiceProvider extends ServiceProvider
         //
         Paginator::useBootstrap();
         Schema::defaultStringLength(191);
+        // DB::listen(function($query) {
+        //     File::append(
+        //         storage_path('/logs/query.log'),
+        //         ' [' .date('Y-m-d H:i:s') . ']'. ' local.debug: ' . $query->time .'--' . $query->sql . ' [' . implode(', ', $query->bindings) . ']' . PHP_EOL
+        //     );
+        // });
     }
 }
