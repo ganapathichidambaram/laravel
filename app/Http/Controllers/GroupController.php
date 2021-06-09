@@ -7,6 +7,7 @@ use App\Group;
 use App\Permission;
 use App\User;
 use Illuminate\Support\Str;
+use App\Authorizable;
 
 class GroupController extends Controller
 {
@@ -15,6 +16,7 @@ class GroupController extends Controller
      *
      * @return void
      */
+    use Authorizable;
     private $view;
     private $conf;
 
@@ -27,6 +29,7 @@ class GroupController extends Controller
         $this->view["disabled"]=$this->conf::$html_disabled;
         $this->view["table"]=$this->conf->getTable();
         $this->view["hidden"]=$this->conf->getHidden();
+        $this->view["nav"] = "config-nav";
     }
 
     public function getData()

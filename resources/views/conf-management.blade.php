@@ -41,7 +41,7 @@
                         <th style="width: 92%" scope="col">{{ucfirst($key)}}</th>
                         @endforeach
                         <!-- <th style="width: 6%" scope="col">Status</th> -->
-                        @if( (isset($view['casts']['action_edit']) && $view['casts']['action_edit'] ) || ( isset($view['casts']['action_delete']) && $view['casts']['action_delete']))
+                        @if( (isset($view['casts']['action_edit']) && $view['casts']['action_edit'] && (auth()->user()->hasGroup('super-admin') ||auth()->user()->hasPermission($view['table'].'.edit')) ) || ( isset($view['casts']['action_delete']) && $view['casts']['action_delete'] && (auth()->user()->hasGroup('super-admin') || auth()->user()->hasPermission($view['table'].'.delete'))))
                         <th style="width: 6%" scope="col">Action</th>
                         @endif
                     </tr>
@@ -53,23 +53,25 @@
                 @foreach ($view['list'] as $key)
                 <td>
                 @if($loop->iteration == 1)
+                @if(auth()->user()->hasGroup('super-admin') || auth()->user()->hasPermission($view['table'].'.read'))
                 <a href="{{ route($view['table'].'.show',$confarry->id) }}?@if( request()->get('page') )page={{ request()->get('page') }}@endif">
                 @endif
+                @endif
                 {{ $confarry[$key] }}
-                @if($loop->iteration == 1)</a> @endif
+                @if($loop->iteration == 1) @if(auth()->user()->hasGroup('super-admin') || auth()->user()->hasPermission($view['table'].'.read'))</a> @endif @endif
                 </td>
                 @endforeach
                 <!-- <td><i class="fas fa fa-check-circle text-success" aria-hidden="true"></i></td> -->
-                @if( (isset($view['casts']['action_edit']) && $view['casts']['action_edit'] ) || ( isset($view['casts']['action_delete']) && $view['casts']['action_delete']))
+                @if( (isset($view['casts']['action_edit']) && $view['casts']['action_edit'] && (auth()->user()->hasGroup('super-admin') || auth()->user()->hasPermission($view['table'].'.edit') )) || ( isset($view['casts']['action_delete']) && $view['casts']['action_delete'] && (auth()->user()->hasGroup('super-admin') ||auth()->user()->hasPermission($view['table'].'.delete'))))
                 <td>
                 @endif
-                    @if(isset($view['casts']['action_edit']) && $view['casts']['action_edit'])
+                    @if(isset($view['casts']['action_edit']) && $view['casts']['action_edit'] && (auth()->user()->hasGroup('super-admin') || auth()->user()->hasPermission($view['table'].'.edit')))
                     <a href="{{ route($view['table'].'.edit',$confarry->id) }}?@if( request()->get('page') )page={{ request()->get('page') }}@endif">
                     <i class="fas fa fa-edit" aria-hidden="true"></i>
                     </a>
                     &nbsp;&nbsp;
                     @endif
-                    @if(isset($view['casts']['action_delete']) && $view['casts']['action_delete'])
+                    @if(isset($view['casts']['action_delete']) && $view['casts']['action_delete'] && (auth()->user()->hasGroup('super-admin') || auth()->user()->hasPermission($view['table'].'.delete')))
                     <a data-toggle="modal" href="#" id="confirmationLink" data-target="#confirmation-modal" data-attr="{{ route($view['table'].'.destroy', $confarry->id) }}"  data- id="{{ $confarry->id}}" data-name="{{$confarry[$view['list'][0]]}}" title="Delete {{ ucfirst(Str::singular($view['table'])) }}">
                     <i class="fas fa-times-circle text-danger" aria-hidden="true"></i>
                     </a>

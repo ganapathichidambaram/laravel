@@ -8,6 +8,7 @@ use App\User;
 use App\Group;
 //use Junges\ACL\Traits\UsersTrait;
 use Illuminate\Support\Str;
+use App\Authorizable;
 
 class PermissionController extends Controller
 {
@@ -16,7 +17,7 @@ class PermissionController extends Controller
      *
      * @return void
      */
-    
+    use Authorizable;
     private $view;
     private $conf;
 
@@ -29,6 +30,7 @@ class PermissionController extends Controller
         $this->view["disabled"]=$this->conf::$html_disabled;
         $this->view["table"]=$this->conf->getTable();
         $this->view["hidden"]=$this->conf->getHidden();
+        $this->view["nav"] = "config-nav";
     }
 
     private function getData() 
@@ -76,8 +78,8 @@ class PermissionController extends Controller
         $input = $request->all();
 
         $conf = $this->conf::create($input);
-        $conf->users()->sync($input['users']);
-        $conf->groups()->sync($conf->convertToGroupIds($input['groups']));
+        if(isset($input['users'])) $conf->users()->sync($input['users']);
+        if(isset($input['groups'])) $conf->groups()->sync($conf->convertToGroupIds($input['groups']));
         return $this->formatResponse($request);
     }
     
@@ -121,8 +123,8 @@ class PermissionController extends Controller
         $input = $request->all();
         
         $conf = $this->conf::find($id);
-        $conf->users()->sync($input['users']);
-        $conf->groups()->sync($conf->convertToGroupIds($input['groups']));
+        if(isset($input['users'])) $conf->users()->sync($input['users']);
+        if(isset($input['groups'])) $conf->groups()->sync($conf->convertToGroupIds($input['groups']));
         $conf->update($input);
 
         return $this->formatResponse($request,$conf);        
