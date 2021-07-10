@@ -82,3 +82,9 @@ sed -i 's/3490dc/18578C/g' public/css/app.css
 ```
 composer remove yajra/laravel-oci8
 ```
+
+* Upgrade Hints
+To update repository need to copy composer.json and package.json and need to run this additional package to upgrade
+```
+composer require artesaos/seotools mateusjunges/laravel-acl yajra/laravel-oci8 laravel/ui
+```
