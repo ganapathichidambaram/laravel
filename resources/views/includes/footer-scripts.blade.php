@@ -1,18 +1,11 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-{{--
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-<script src="../../../../assets/js/vendor/popper.min.js"></script>
-<script src="../../../../dist/js/bootstrap.min.js"></script>
---}}
+
 <!-- Scripts -->
 <script src="{{ asset('js/manifest.js') }}" defer></script>
 <script src="{{ asset('js/vendor.js') }}" defer></script>
 <script src="{{ asset('js/technobureau.js') }}" defer></script>
-<!-- <script src="{{ asset('js/scripts.js') }}" defer></script> -->
-<link href="{{ asset('css/font-awsome.min.css') }}" rel="stylesheet">
 <!-- <link href="{{ asset('css/bootstrap-select.min.css') }}" rel="stylesheet">
 <script src="{{ asset('js/bootstrap-select.min.js') }}" defer></script> -->
 <!-- @include("includes.sw") -->
