@@ -17,10 +17,8 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
-        "mateusjunges/laravel-acl": "^2.6"
-    },
-    "require-dev": {
-        
+        "mateusjunges/laravel-acl": "^2.6",
+        "yajra/laravel-oci8": "^8.4"
     },
     "config": {
         "optimize-autoloader": true,

@@ -76,3 +76,9 @@ sed -i 's/3490dc/18578C/g' public/css/app.css
 * Removed CSS for topnavigation collapsed with leftside navigation
 ```
 .sb-topnav{padding-left:0;height:56px;z-index:1039}
+```
+
+* Oracle DB installed due to cloud instance. You can remove when its not necessary
+```
+composer remove yajra/laravel-oci8
+```
