@@ -14,8 +14,11 @@
         e.preventDefault();
         $("body").toggleClass("sb-sidenav-toggled");
     });
-    if(!detectMobile() && $('#layoutSidenav_nav').length == 0)
-    $("body").toggleClass("sb-sidenav-toggled");
+    if($('#layoutSidenav_nav').length == 0)
+    {
+        if(!detectMobile()) $("body").toggleClass("sb-sidenav-toggled");
+        $("#sidebarToggle").remove();
+    }
 })(jQuery);
 $(document).on('show.bs.modal','#confirmation-modal', function (event){
     $(this).find('#name').text($(event.relatedTarget).data('name'))

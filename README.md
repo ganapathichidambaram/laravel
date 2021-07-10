@@ -71,3 +71,8 @@ npm run prod
 ```
 sed -i 's/3490dc/18578C/g' public/css/app.css
 ```
+
+
+* Removed CSS for topnavigation collapsed with leftside navigation
+```
+.sb-topnav{padding-left:0;height:56px;z-index:1039}
