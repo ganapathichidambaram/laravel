@@ -8,9 +8,11 @@
 <script src="../../../../dist/js/bootstrap.min.js"></script>
 --}}
 <!-- Scripts -->
-<script src="{{ asset('js/app.js') }}" defer></script>
-<script src="{{ asset('js/scripts.js') }}" defer></script>
+<script src="{{ asset('js/manifest.js') }}" defer></script>
+<script src="{{ asset('js/vendor.js') }}" defer></script>
+<script src="{{ asset('js/technobureau.js') }}" defer></script>
+<!-- <script src="{{ asset('js/scripts.js') }}" defer></script> -->
 <link href="{{ asset('css/font-awsome.min.css') }}" rel="stylesheet">
-<link href="{{ asset('css/bootstrap-select.min.css') }}" rel="stylesheet">
-<script src="{{ asset('js/bootstrap-select.min.js') }}" defer></script>
+<!-- <link href="{{ asset('css/bootstrap-select.min.css') }}" rel="stylesheet">
+<script src="{{ asset('js/bootstrap-select.min.js') }}" defer></script> -->
 <!-- @include("includes.sw") -->

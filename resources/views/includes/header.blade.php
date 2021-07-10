@@ -10,6 +10,6 @@
     {!! SEO::generate(true) !!}
     <!-- Styles -->
     <!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
-    <link href="{{ asset('css/style.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/technobureau.css') }}" rel="stylesheet">
 
 </head>        

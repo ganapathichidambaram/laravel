@@ -1,4 +1,6 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/js/technobureau.js": "/js/technobureau.js?id=1d821a3ad5b1ed42b90b",
+    "/js/manifest.js": "/js/manifest.js?id=5588849f7ca1805fdd7f",
+    "/css/technobureau.css": "/css/technobureau.css?id=1808625f7b8f6d86106d",
+    "/js/vendor.js": "/js/vendor.js?id=5d032cf58e4af1b7b8e2"
 }

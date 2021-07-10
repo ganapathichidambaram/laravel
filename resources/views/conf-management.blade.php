@@ -10,7 +10,7 @@
             <div class="flex container d-flex" >
                 <div class="mt-auto pb-2 pt-1 w-100 d-flex justify-content-start">
                     @if(isset($view['casts']['search']) && $view['casts']['search'])
-                    <form class="d-none d-md-inline-block form-inline mr-0 mr-md-5 my-2 my-md-0" method="GET" action="{{ route($view['table'].'.index') }}">
+                    <form class="d-none d-md-inline-block form-inline me-0 me-md-5 my-2 my-md-0" method="GET" action="{{ route($view['table'].'.index') }}">
                         <div class="input-group">
                             <input class="form-control" type="text" name="search" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" />
                             <div class="input-group-append">
@@ -72,7 +72,7 @@
                     &nbsp;&nbsp;
                     @endif
                     @if(isset($view['casts']['action_delete']) && $view['casts']['action_delete'] && (auth()->user()->hasGroup('super-admin') || auth()->user()->hasPermission($view['table'].'.delete')))
-                    <a data-toggle="modal" href="#" id="confirmationLink" data-target="#confirmation-modal" data-attr="{{ route($view['table'].'.destroy', $confarry->id) }}"  data- id="{{ $confarry->id}}" data-name="{{$confarry[$view['list'][0]]}}" title="Delete {{ ucfirst(Str::singular($view['table'])) }}">
+                    <a data-bs-toggle="modal" href="#" id="confirmationLink" data-bs-target="#confirmation-modal" data-bs-attr="{{ route($view['table'].'.destroy', $confarry->id) }}"  data-bs- id="{{ $confarry->id}}" data-bs-name="{{$confarry[$view['list'][0]]}}" title="Delete {{ ucfirst(Str::singular($view['table'])) }}">
                     <i class="fas fa-times-circle text-danger" aria-hidden="true"></i>
                     </a>
                     @endif
@@ -104,7 +104,7 @@
                     <ul class="nav nav-tabs" role="tablist" id="ConfTab">
                         @foreach ($view['casts'] as $key => $value)
                         @if(is_array($value))
-                        <li class="nav-item"><a  id="{{$key}}-tab" class="nav-link @if($loop->iteration == 1) active @endif" data-toggle="tab" href="#{{$key}}">{{ ucfirst($key) }}</a></li>
+                        <li class="nav-item"><a  id="{{$key}}-tab" class="nav-link @if($loop->iteration == 1) active @endif" data-bs-toggle="tab" href="#{{$key}}">{{ ucfirst($key) }}</a></li>
                         @endif
                         @endforeach
                     </ul>    
@@ -138,7 +138,7 @@
                                     @elseif( $val == 'multi' || $val == 'select')
                                     <label for="{{$fields}}" class="col-md-5 col-form-label">{{ __(ucfirst($fields)) }}</label>
                                     <div class="col-md-7">
-                                    <select name="{{$fields}}@if($val == 'multi')[]@endif" id="{{$fields}}" class="selectpicker form-control" data-live-search="true" @if($val == 'multi') multiple @endif data-actions-box="true" data-selected-text-format="count" data-size="5" >
+                                    <select name="{{$fields}}@if($val == 'multi')[]@endif" id="{{$fields}}" class="selectpicker form-control" data-bs-live-search="true" @if($val == 'multi') multiple @endif data-bs-actions-box="true" data-bs-selected-text-format="count" data-bs-size="5" >
                                     @isset($_fData[$fields])
                                         @foreach( $_fData[$fields] as $_fkey => $_fval)
                                         <option value="{{$_fkey}}" @if(isset($_cData[$fields]) && in_array($_fkey,$_cData[$fields])) selected @endif>{{$_fval}}</option>
