@@ -1,4 +1,10 @@
+// const _ = require('lodash')
+// const del = require('del')
+// const fs = require('fs')
+// const mixManifest = 'public/mix-manifest.json'
+// const jsonFile = require('jsonfile')
 const mix = require('laravel-mix');
+
 
 /*
  |--------------------------------------------------------------------------
@@ -25,7 +31,32 @@ mix.js('resources/js/technobureau.js', 'public/js')
   mix.extract();
       
   if (mix.inProduction()) {
-    mix.version();
+    mix.version()
+  //   .then(() => {
+  //     // Parse the mix-manifest file
+  //     jsonFile.readFile(mixManifest, (err, obj) => {
+  //         const newJson = {}
+
+  //         _.forIn(obj, (value, key) => {
+  //             // Get the hash from the ?id= query string parameter and move it into the file name e.g. 'app.abcd1234.css'
+  //             const newFilename = value.replace(/([^.]+)\.([^?]+)\?id=(.+)$/g, '$1.$3.$2')
+  //             // Create a glob pattern of all files with the new file naming style e.g. 'app.*.css'
+  //             const oldAsGlob = value.replace(/([^.]+)\.([^?]+)\?id=(.+)$/g, '$1.*.$2')
+  //             // Delete old versioned file(s) that match the glob pattern
+  //             del.sync([`public${oldAsGlob}`])
+  //             // Copy as new versioned file name
+  //             fs.copyFile(`public${key}`, `public${newFilename}`, (err) => {
+  //                 if (err) console.error(err)
+  //             })
+  //             newJson[key] = newFilename
+  //         })
+  //         // Write the new contents of the mix manifest file
+  //         jsonFile.writeFile(mixManifest, newJson, { spaces: 4 }, (err) => {
+  //             if (err) console.error(err)
+  //         })
+  //     })
+  // })
+  ;
   }
 //mix.copy('node_modules/bootstrap-select/dist/js/bootstrap-select.min.js','public/js/')
 //mix.postCss('public/css/technobureau.css', 'public/css');
