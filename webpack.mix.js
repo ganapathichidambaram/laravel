@@ -19,16 +19,13 @@ mix.options({
 mix.disableNotifications();
 
 mix.js('resources/js/technobureau.js', 'public/js')
-    .sass('resources/scss/technobureau.scss', 'public/css')
-    .extract(['jquery','lodash','popper.js','bootstrap','bootstrap-select'])
-    //.purgeCss()
-    //.clean()
-    // .cleanCss({
-    //     level: 2,
-    //     format: mix.inProduction() ? false : 'beautify' // Beautify only in dev mode
-    //   })
-      ;
-      if (mix.inProduction()) {
-        mix.version();
-    }
+    .sass('resources/scss/technobureau.scss', 'public/css');
+  // mix.extract(['bootstrap-select'],'public/js/bootstrap-select');
+  // mix.extract(['bootstrap'],'public/js/bootstrap');
+  mix.extract();
+      
+  if (mix.inProduction()) {
+    mix.version();
+  }
+//mix.copy('node_modules/bootstrap-select/dist/js/bootstrap-select.min.js','public/js/')
 //mix.postCss('public/css/technobureau.css', 'public/css');

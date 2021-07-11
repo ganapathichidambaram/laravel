@@ -146,7 +146,7 @@
                                     @elseif( $val == 'multi' || $val == 'select')
                                     <label for="{{$fields}}" class="col-md-5 col-form-label">{{ __(ucfirst($fields)) }}</label>
                                     <div class="col-md-7">
-                                    <select name="{{$fields}}@if($val == 'multi')[]@endif" id="{{$fields}}" class="selectpicker form-control" data-bs-live-search="true" @if($val == 'multi') multiple @endif data-bs-actions-box="true" data-bs-selected-text-format="count" data-bs-size="5" >
+                                    <select name="{{$fields}}@if($val == 'multi')[]@endif" id="{{$fields}}" class="selectpicker form-control" data-live-search="true" @if($val == 'multi') multiple @endif data-actions-box="true" data-selected-text-format="count" data-size="5" >
                                     @isset($_fData[$fields])
                                         @foreach( $_fData[$fields] as $_fkey => $_fval)
                                         <option value="{{$_fkey}}" @if(isset($_cData[$fields]) && in_array($_fkey,$_cData[$fields])) selected @endif>{{$_fval}}</option>
